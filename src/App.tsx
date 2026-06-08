@@ -1,9 +1,14 @@
 import { useState } from "react";
-import { ArcCore } from "./components/ArcCore";
-import { ChatPanel } from "./components/ChatPanel";
-import { Header } from "./components/Header";
-import { StatusBar } from "./components/StatusBar";
-import type { Message } from "./types";
+import { HistoryPanel } from "./components/HistoryPanel";
+import { MessageCompose } from "./components/MessageCompose";
+import { MicListen } from "./components/MicListen";
+import { OrbControls } from "./components/OrbControls";
+import { ReactiveOrb } from "./components/ReactiveOrb";
+import { Sidebar } from "./components/Sidebar";
+import { SidebarToggle } from "./components/SidebarToggle";
+import { useAudioReactive } from "./hooks/useAudioReactive";
+import { useSpeechRecognition } from "./hooks/useSpeechRecognition";
+import type { AiModelId, Message } from "./types";
 import "./App.css";
 
 const INITIAL_MESSAGES: Message[] = [
@@ -16,22 +21,42 @@ const INITIAL_MESSAGES: Message[] = [
 ];
 
 export default function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [messageOpen, setMessageOpen] = useState(false);
+  const [listeningOpen, setListeningOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
-  const [isListening, setIsListening] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
+  const [aiModel, setAiModel] = useState<AiModelId>("arcus");
+  const {
+    level,
+    isUserSpeaking,
+    isAssistantSpeaking,
+    micError,
+  } = useAudioReactive();
+
+  const controlsHidden = messageOpen || listeningOpen || historyOpen;
+
+  const openHistory = () => {
+    setMessageOpen(false);
+    setListeningOpen(false);
+    setHistoryOpen(true);
+  };
+  const closeHistory = () => setHistoryOpen(false);
 
   const handleSend = (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
     const userMessage: Message = {
       id: crypto.randomUUID(),
       role: "user",
-      content: text,
+      content: trimmed,
       timestamp: new Date(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
     setIsThinking(true);
 
-    // Placeholder — friend will wire up the real backend
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
@@ -47,40 +72,70 @@ export default function App() {
     }, 900);
   };
 
-  const toggleListening = () => {
-    setIsListening((prev) => !prev);
-  };
+  useSpeechRecognition({
+    enabled: listeningOpen,
+    onFinalTranscript: handleSend,
+  });
 
   return (
     <div className="app">
-      <div className="app__bg" aria-hidden />
-      <div className="app__grid" aria-hidden />
+      <SidebarToggle
+        isOpen={sidebarOpen}
+        onToggle={() => setSidebarOpen((open) => !open)}
+      />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <Header />
+      <HistoryPanel
+        isOpen={historyOpen}
+        onClose={closeHistory}
+        messages={messages}
+        isThinking={isThinking}
+        onSend={handleSend}
+        aiModel={aiModel}
+        onAiModelChange={setAiModel}
+      />
 
-      <main className="app__main">
-        <section className="app__core" aria-label="Arcus core">
-          <ArcCore isListening={isListening} isThinking={isThinking} />
-          <button
-            type="button"
-            className={`voice-btn ${isListening ? "voice-btn--active" : ""}`}
-            onClick={toggleListening}
-            aria-pressed={isListening}
-            aria-label={isListening ? "Stop listening" : "Start listening"}
-          >
-            <span className="voice-btn__ring" />
-            <span className="voice-btn__icon" />
-          </button>
-        </section>
+      <div
+        className={`app__stage ${sidebarOpen ? "app__stage--shifted" : ""} ${historyOpen ? "app__stage--history-shifted" : ""}`}
+      >
+        <div className="app__center">
+          <ReactiveOrb
+            activity={level}
+            isUserSpeaking={isUserSpeaking || listeningOpen}
+            isAssistantSpeaking={isAssistantSpeaking}
+          />
+        </div>
 
-        <ChatPanel
-          messages={messages}
-          isThinking={isThinking}
+        <MessageCompose
+          isOpen={messageOpen && !historyOpen}
+          onClose={() => setMessageOpen(false)}
           onSend={handleSend}
+          onHistoryClick={openHistory}
         />
-      </main>
 
-      <StatusBar isListening={isListening} isThinking={isThinking} />
+        <MicListen
+          isOpen={listeningOpen && !historyOpen}
+          onClose={() => setListeningOpen(false)}
+          onHistoryClick={openHistory}
+          level={level}
+          isUserSpeaking={isUserSpeaking}
+          micError={micError}
+        />
+
+        {!controlsHidden && (
+          <OrbControls
+            onMessageClick={() => {
+              setListeningOpen(false);
+              setMessageOpen(true);
+            }}
+            onMicClick={() => {
+              setMessageOpen(false);
+              setListeningOpen(true);
+            }}
+            onHistoryClick={openHistory}
+          />
+        )}
+      </div>
     </div>
   );
 }

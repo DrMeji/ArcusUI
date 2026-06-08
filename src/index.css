@@ -1,22 +1,20 @@
+@import "./styles/panel-reactor.css";
+
+:root {
+  --tab-left: 1.1rem;
+  --tab-inset: 0.58rem;
+  --tab-top: var(--tab-inset);
+  --tab-width: min(330px, 28vw);
+  --history-width: min(570px, 44vw);
+  --history-shift: calc(0.5 * (var(--tab-inset) + var(--history-width)));
+}
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-:root {
-  --bg-deep: #030712;
-  --bg-panel: rgba(8, 16, 32, 0.72);
-  --accent: #38bdf8;
-  --accent-dim: #0ea5e9;
-  --accent-glow: rgba(56, 189, 248, 0.45);
-  --text-primary: #e2e8f0;
-  --text-muted: #64748b;
-  --border: rgba(56, 189, 248, 0.18);
-  --font-display: "Orbitron", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
 }
 
 html,
@@ -26,15 +24,8 @@ body,
 }
 
 body {
-  font-family: var(--font-body);
-  background: var(--bg-deep);
-  color: var(--text-primary);
+  background: #000000;
+  color: #ffffff;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
-}
-
-button,
-input,
-textarea {
-  font-family: inherit;
 }

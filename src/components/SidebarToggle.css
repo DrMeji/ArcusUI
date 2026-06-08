@@ -1,0 +1,40 @@
+.sidebar-toggle {
+  position: fixed;
+  top: calc(var(--tab-inset, 0.58rem) + 0.77rem);
+  left: var(--tab-left, 1.1rem);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  transition:
+    left 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.2s,
+    background 0.2s;
+}
+
+.sidebar-toggle--open {
+  left: calc(var(--tab-left, 1.1rem) + var(--tab-width, min(450px, 32vw)) - 2.6rem);
+}
+
+.sidebar-toggle:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-toggle:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 2px;
+}
+
+.sidebar-toggle__icon {
+  width: 1.35rem;
+  height: 1.35rem;
+}

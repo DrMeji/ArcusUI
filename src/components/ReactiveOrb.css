@@ -1,0 +1,133 @@
+.reactive-orb-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.reactive-orb {
+  --orb-size: 420px;
+  position: relative;
+  z-index: 1;
+  width: min(var(--orb-size), 62vw);
+  height: min(var(--orb-size), 62vw);
+  pointer-events: none;
+}
+
+.reactive-orb canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.reactive-orb__glow {
+  position: absolute;
+  bottom: -5%;
+  left: 50%;
+  z-index: 0;
+  width: 88%;
+  height: 26%;
+  pointer-events: none;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse 100% 80% at 50% 42%,
+    rgba(148, 56, 255, 0.14) 0%,
+    rgba(31, 199, 255, 0.08) 50%,
+    transparent 78%
+  );
+  filter: blur(18px);
+  animation: orb-light-ambient 6s ease-in-out infinite alternate;
+}
+
+.reactive-orb__glow::before,
+.reactive-orb__glow::after {
+  content: "";
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  width: 100%;
+  height: 115%;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.7);
+  opacity: 0;
+}
+
+.reactive-orb__glow::before {
+  background: radial-gradient(
+    ellipse 100% 78% at 50% 50%,
+    rgba(255, 56, 148, 0.32) 0%,
+    rgba(148, 56, 255, 0.22) 35%,
+    rgba(31, 199, 255, 0.1) 62%,
+    transparent 82%
+  );
+  filter: blur(20px);
+  animation: orb-light-spread 5.2s ease-out infinite;
+}
+
+.reactive-orb__glow::after {
+  background: radial-gradient(
+    ellipse 105% 82% at 50% 50%,
+    rgba(31, 199, 255, 0.24) 0%,
+    rgba(26, 235, 199, 0.14) 40%,
+    rgba(148, 56, 255, 0.08) 65%,
+    transparent 85%
+  );
+  filter: blur(26px);
+  animation: orb-light-spread 5.2s ease-out infinite;
+  animation-delay: -2.6s;
+}
+
+@keyframes orb-light-spread {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.68);
+  }
+  18% {
+    opacity: 0.75;
+  }
+  45% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  72% {
+    opacity: 0.22;
+    transform: translate(-50%, -50%) scale(1.18);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.38);
+  }
+}
+
+@keyframes orb-light-ambient {
+  0% {
+    opacity: 0.38;
+  }
+  100% {
+    opacity: 0.62;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reactive-orb__glow,
+  .reactive-orb__glow::before,
+  .reactive-orb__glow::after {
+    animation: none;
+  }
+
+  .reactive-orb__glow {
+    opacity: 0.55;
+  }
+
+  .reactive-orb__glow::before {
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .reactive-orb__glow::after {
+    display: none;
+  }
+}

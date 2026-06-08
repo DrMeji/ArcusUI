@@ -6,9 +6,15 @@ interface ChatPanelProps {
   messages: Message[];
   isThinking: boolean;
   onSend: (text: string) => void;
+  embedded?: boolean;
 }
 
-export function ChatPanel({ messages, isThinking, onSend }: ChatPanelProps) {
+export function ChatPanel({
+  messages,
+  isThinking,
+  onSend,
+  embedded = false,
+}: ChatPanelProps) {
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -25,11 +31,10 @@ export function ChatPanel({ messages, isThinking, onSend }: ChatPanelProps) {
   };
 
   return (
-    <aside className="chat-panel" aria-label="Conversation">
-      <div className="chat-panel__header">
-        <h2>Conversation</h2>
-      </div>
-
+    <aside
+      className={`chat-panel ${embedded ? "chat-panel--embedded" : ""}`}
+      aria-label="Conversation"
+    >
       <div className="chat-panel__messages" role="log" aria-live="polite">
         {messages.map((msg) => (
           <div
