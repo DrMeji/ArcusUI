@@ -27,7 +27,7 @@ const vertexShader = /* glsl */ `
   void main() {
     vec3 n = normalize(normalMatrix * normal);
     float t = uTime;
-    float energy = 0.12 + uActivity * 0.42 + uSpeak * 0.28;
+    float energy = 0.08 + uActivity * 0.36 + uSpeak * 0.24;
     float disp = ripple(position, t) * energy;
     vec3 displaced = position + normal * disp;
 
@@ -49,41 +49,43 @@ const fragmentShader = /* glsl */ `
 
   void main() {
     vec3 viewDir = normalize(cameraPosition - vWorldPos);
-    float fresnel = pow(1.0 - max(dot(viewDir, vNormal), 0.0), 2.2);
+    float fresnel = pow(1.0 - max(dot(viewDir, vNormal), 0.0), 2.5);
 
-    float t = uTime * 0.7;
-    float band1 = sin(vWorldPos.x * 3.8 + t + vDisp * 10.0) * 0.5 + 0.5;
-    float band2 = cos(vWorldPos.y * 4.2 - t * 1.1 + vWorldPos.z * 2.0) * 0.5 + 0.5;
-    float band3 = sin(vWorldPos.z * 3.5 + t * 0.85) * cos(vWorldPos.x * 2.5 - t * 0.6) * 0.5 + 0.5;
-    float palette = fract(band1 * 0.35 + band2 * 0.35 + band3 * 0.3 + fresnel * 0.15);
+    float t = uTime * 0.42;
 
-    vec3 white   = vec3(0.97, 0.96, 0.98);
-    vec3 pink    = vec3(1.0, 0.22, 0.58);
-    vec3 magenta = vec3(0.88, 0.1, 0.72);
-    vec3 violet  = vec3(0.58, 0.22, 1.0);
-    vec3 cyan    = vec3(0.12, 0.78, 1.0);
-    vec3 teal    = vec3(0.1, 0.92, 0.78);
-    vec3 lime    = vec3(0.55, 1.0, 0.35);
-    vec3 yellow  = vec3(1.0, 0.92, 0.35);
-    vec3 orange  = vec3(1.0, 0.52, 0.18);
-    vec3 coral   = vec3(1.0, 0.38, 0.42);
+    // Diagonal silk bands — top-right to bottom-left
+    float diag1 = vWorldPos.x * 0.9 - vWorldPos.y * 1.2 + vWorldPos.z * 0.38;
+    float diag2 = vWorldPos.x * 0.62 + vWorldPos.y * 0.75 - vWorldPos.z * 0.48;
+    float wave1 = sin(diag1 * 2.8 + t + vDisp * 4.5) * 0.5 + 0.5;
+    float wave2 = sin(diag2 * 3.5 - t * 0.75) * 0.5 + 0.5;
+    float wave3 = cos(vWorldPos.z * 2.2 + t * 0.55) * sin(vWorldPos.x * 1.8 - t * 0.45) * 0.5 + 0.5;
+    float blend = wave1 * 0.48 + wave2 * 0.34 + wave3 * 0.18;
+    blend = smoothstep(0.22, 0.78, blend);
+    blend = pow(blend, 1.4);
 
-    vec3 color;
-    if (palette < 0.14)       color = mix(pink, magenta, palette / 0.14);
-    else if (palette < 0.28)  color = mix(magenta, violet, (palette - 0.14) / 0.14);
-    else if (palette < 0.42)  color = mix(violet, cyan, (palette - 0.28) / 0.14);
-    else if (palette < 0.56)  color = mix(cyan, teal, (palette - 0.42) / 0.14);
-    else if (palette < 0.68)  color = mix(teal, lime, (palette - 0.56) / 0.12);
-    else if (palette < 0.80)  color = mix(lime, yellow, (palette - 0.68) / 0.12);
-    else if (palette < 0.90)  color = mix(yellow, orange, (palette - 0.80) / 0.10);
-    else                      color = mix(orange, coral, (palette - 0.90) / 0.10);
+    // Reference palette: royal cobalt valleys, electric cyan peaks
+    vec3 royalDeep = vec3(0.0, 0.18, 0.55);   // #002E8C
+    vec3 cobalt    = vec3(0.0, 0.08, 0.92);   // #0014EB
+    vec3 skyBlue   = vec3(0.0, 0.68, 0.94);   // #00AEEF
+    vec3 cyanGlow  = vec3(0.0, 0.75, 1.0);    // #00BFFF
+    vec3 highlight = vec3(0.78, 0.94, 1.0);   // luminous near-white cyan
 
-    float energy = 0.5 + uActivity * 0.3 + uSpeak * 0.2;
-    color = mix(white, color, energy);
-    color = mix(color, mix(violet, cyan, band2), fresnel * 0.25);
-    color += fresnel * mix(yellow, pink, band3) * (0.12 + uActivity * 0.2 + uSpeak * 0.15);
+    vec3 color = mix(royalDeep, cobalt, smoothstep(0.0, 0.32, blend));
+    color = mix(color, skyBlue, smoothstep(0.24, 0.58, blend));
+    color = mix(color, cyanGlow, smoothstep(0.5, 0.8, blend));
+    color = mix(color, highlight, smoothstep(0.74, 0.98, blend));
 
-    float alpha = smoothstep(0.95, 0.2, fresnel) * 0.88;
+    float inner = pow(max(dot(viewDir, vNormal), 0.0), 1.65);
+    color += highlight * inner * (0.12 + uActivity * 0.06 + uSpeak * 0.05);
+
+    vec3 rim = mix(cyanGlow, highlight, fresnel * 0.95 + 0.05);
+    color = mix(color, rim, fresnel * 0.42);
+    color += fresnel * cyanGlow * (0.22 + uActivity * 0.14 + uSpeak * 0.1);
+
+    float energy = 0.96 + uActivity * 0.03 + uSpeak * 0.02;
+    color *= energy;
+
+    float alpha = smoothstep(0.96, 0.32, fresnel) * 0.94;
     gl_FragColor = vec4(color, alpha);
   }
 `;
@@ -150,15 +152,19 @@ export function ReactiveOrb({
     const orb = new THREE.Mesh(geometry, material);
     scene.add(orb);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    const keyLight = new THREE.DirectionalLight(0xb8ecff, 1.4);
     keyLight.position.set(2, 2, 4);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x66ccff, 0.8);
+    const rimLight = new THREE.DirectionalLight(0x00bfff, 1.2);
     rimLight.position.set(-3, -1, 2);
     scene.add(rimLight);
 
-    const ambient = new THREE.AmbientLight(0xffffff, 0.35);
+    const fillLight = new THREE.DirectionalLight(0x0047ab, 0.6);
+    fillLight.position.set(0, -2, 3);
+    scene.add(fillLight);
+
+    const ambient = new THREE.AmbientLight(0x66ccff, 0.45);
     scene.add(ambient);
 
     let raf = 0;
@@ -225,7 +231,6 @@ export function ReactiveOrb({
   return (
     <div className="reactive-orb-wrap">
       <div ref={mountRef} className="reactive-orb" aria-hidden />
-      <div className="reactive-orb__glow" aria-hidden />
     </div>
   );
 }

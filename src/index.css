@@ -1,6 +1,27 @@
 @import "./styles/panel-reactor.css";
 
 :root {
+  --c-blue-900: #133971;
+  --c-blue-800: #0041fe;
+  --c-blue-700: #0252f8;
+  --c-blue-600: #0c62ef;
+  --c-blue-500: #048bfb;
+  --c-blue-400: #079ffb;
+  --c-black: #000000;
+  --c-surface: #000000;
+  --c-panel: #0a0a0a;
+  --c-elevated: #111111;
+  --c-text: #ffffff;
+  --c-text-muted: #a0a1a1;
+  --c-text-dim: #5d5d5e;
+  --c-border: rgba(255, 255, 255, 0.1);
+  --c-border-soft: rgba(255, 255, 255, 0.06);
+  --c-border-blue: rgba(7, 159, 251, 0.42);
+  --c-accent-soft: rgba(4, 139, 251, 0.24);
+  --c-accent-mid: rgba(2, 82, 248, 0.42);
+  --c-panel-bg: rgba(8, 8, 8, 0.96);
+  --c-input-bg: rgba(14, 14, 14, 0.95);
+
   --tab-left: 1.1rem;
   --tab-inset: 0.58rem;
   --tab-top: var(--tab-inset);
@@ -24,8 +45,8 @@ body,
 }
 
 body {
-  background: #000000;
-  color: #ffffff;
+  background: var(--c-black);
+  color: var(--c-text);
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
 }

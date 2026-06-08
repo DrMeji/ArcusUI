@@ -12,6 +12,7 @@ import {
   ResearcherIcon,
   WorkspaceIcon,
 } from "./icons/sidebar/SidebarNavIcons";
+import { ArcusLogo } from "./ArcusLogo";
 import { SettingsIcon } from "./icons/SettingsIcon";
 import "./Sidebar.css";
 
@@ -95,6 +96,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         aria-hidden={!isOpen}
       >
         <div className="sidebar__header">
+          <ArcusLogo className="sidebar__header-logo" />
           <span className="sidebar__title">A R C U S</span>
         </div>
         <nav className="sidebar__nav" aria-label="Main">
@@ -141,7 +143,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             aria-label="Arcus Admin"
           >
             <span className="sidebar__avatar" aria-hidden>
-              A
+              <ArcusLogo className="sidebar__avatar-logo" />
             </span>
             <span className="sidebar__profile-info">
               <span className="sidebar__profile-name">Arcus Admin</span>

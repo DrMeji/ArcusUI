@@ -18,7 +18,7 @@
   padding: 0.25rem;
   border: none;
   background: transparent;
-  color: #8a8a8a;
+  color: var(--c-text-muted);
   cursor: pointer;
   transition: color 0.2s;
 }
@@ -29,7 +29,7 @@
 }
 
 .orb-controls__btn:hover {
-  color: #d4d4d4;
+  color: var(--c-blue-400);
 }
 
 .orb-controls__btn:focus-visible {

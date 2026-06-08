@@ -44,7 +44,7 @@
   padding: 0.25rem;
   border: none;
   background: transparent;
-  color: #8a8a8a;
+  color: var(--c-text-muted);
   cursor: pointer;
   transition: color 0.2s;
 }

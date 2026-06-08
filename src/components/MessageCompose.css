@@ -44,7 +44,7 @@
   padding: 0.25rem;
   border: none;
   background: transparent;
-  color: #8a8a8a;
+  color: var(--c-text-muted);
   cursor: pointer;
   transition: color 0.2s;
 }
@@ -55,17 +55,17 @@
 }
 
 .message-compose__history:hover {
-  color: #d4d4d4;
+  color: var(--c-blue-400);
 }
 
 .message-compose input {
   flex: 1;
   min-width: 0;
   padding: 0.7rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--c-border-soft);
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.45);
-  color: #ffffff;
+  background: var(--c-input-bg);
+  color: var(--c-text);
   font-size: 0.92rem;
   outline: none;
   transition: border-color 0.2s;
@@ -76,7 +76,7 @@
 }
 
 .message-compose input:focus {
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: var(--c-border-blue);
 }
 
 .message-compose__send {
@@ -102,18 +102,18 @@
 
 .message-compose__send:not(:disabled) {
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(2, 82, 248, 0.48);
+  border-color: rgba(7, 159, 251, 0.6);
 }
 
 .message-compose__send:not(:disabled) svg {
   color: #ffffff;
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.45));
+  filter: drop-shadow(0 0 8px rgba(7, 159, 251, 0.7));
 }
 
 .message-compose__send:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.38);
+  background: rgba(2, 82, 248, 0.48);
+  border-color: rgba(7, 159, 251, 0.6);
   color: #ffffff;
 }
 

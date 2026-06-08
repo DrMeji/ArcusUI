@@ -23,7 +23,7 @@
   flex-direction: column;
   width: var(--tab-width);
   min-width: 280px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--c-border-blue);
   border-radius: 20px;
   backdrop-filter: blur(24px);
   box-shadow:
@@ -55,10 +55,27 @@
 }
 
 .sidebar__header {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.35rem 1.1rem 0.5rem;
+}
+
+.sidebar__header-logo {
+  position: absolute;
+  left: 1.15rem;
+  width: 2.1rem;
+  height: 2.1rem;
+  object-fit: contain;
+}
+
+.sidebar__title {
+  font-size: 0.88rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  white-space: nowrap;
 }
 
 .sidebar__settings svg {
@@ -74,14 +91,6 @@
 .sidebar__settings:focus-visible {
   outline: 1px solid rgba(255, 255, 255, 0.35);
   outline-offset: 2px;
-}
-
-.sidebar__title {
-  font-size: 0.88rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
-  white-space: nowrap;
 }
 
 .sidebar__nav {
@@ -111,7 +120,7 @@
   border: none;
   border-radius: 12px;
   background: transparent;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--c-text-dim);
   font-size: 0.92rem;
   font-weight: 400;
   text-align: left;
@@ -153,16 +162,16 @@
 }
 
 .sidebar__item:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.85);
+  background: var(--c-accent-soft);
+  color: var(--c-text);
   transform: translateX(2px);
 }
 
 .sidebar__item--active {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.95);
+  background: var(--c-accent-mid);
+  color: #ffffff;
   font-weight: 500;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  box-shadow: 0 1px 0 rgba(7, 159, 251, 0.35) inset;
 }
 
 .sidebar__profile {
@@ -172,7 +181,7 @@
   width: calc(100% - 1.7rem);
   margin: 0 0.85rem 1.1rem;
   padding: 0.55rem 0.55rem 0.55rem 0.7rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--c-border-soft);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.04);
   transition: background 0.2s, border-color 0.2s;
@@ -180,7 +189,7 @@
 
 .sidebar__profile:hover {
   background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: var(--c-border);
 }
 
 .sidebar__profile-main {
@@ -206,7 +215,7 @@
   border: none;
   border-radius: 10px;
   background: transparent;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--c-text-dim);
   cursor: pointer;
   transition: color 0.2s, background 0.2s;
 }
@@ -218,11 +227,12 @@
   flex-shrink: 0;
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 0.9rem;
-  font-weight: 500;
+}
+
+.sidebar__avatar-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .sidebar__profile-info {
@@ -235,10 +245,10 @@
 .sidebar__profile-name {
   font-size: 0.9rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--c-text);
 }
 
 .sidebar__profile-meta {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.42);
+  color: var(--c-blue-400);
 }
