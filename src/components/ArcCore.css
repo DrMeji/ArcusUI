@@ -1,0 +1,156 @@
+.arc-core {
+  position: relative;
+  width: min(340px, 70vw);
+  height: min(340px, 70vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arc-core__orbit {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(56, 189, 248, 0.15);
+}
+
+.arc-core__orbit--outer {
+  inset: 0;
+  animation: spin 24s linear infinite;
+}
+
+.arc-core__orbit--inner {
+  inset: 12%;
+  border-style: dashed;
+  border-color: rgba(56, 189, 248, 0.1);
+  animation: spin 16s linear infinite reverse;
+}
+
+.arc-core__ring {
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--accent);
+  border-right-color: rgba(56, 189, 248, 0.3);
+  animation: spin 3s linear infinite;
+}
+
+.arc-core__glow {
+  position: absolute;
+  inset: 22%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(56, 189, 248, 0.25) 0%,
+    rgba(14, 165, 233, 0.08) 45%,
+    transparent 70%
+  );
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.arc-core__center {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38%;
+  height: 38%;
+  border-radius: 50%;
+  background: rgba(3, 7, 18, 0.85);
+  border: 1px solid var(--border);
+  box-shadow:
+    0 0 40px rgba(56, 189, 248, 0.2),
+    inset 0 0 20px rgba(56, 189, 248, 0.05);
+}
+
+.arc-core__label {
+  font-family: var(--font-display);
+  font-size: clamp(0.65rem, 2.5vw, 0.85rem);
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  color: var(--accent);
+  text-indent: 0.35em;
+}
+
+.arc-core__waveform {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 32px;
+  opacity: 0.35;
+}
+
+.arc-core__bar {
+  display: block;
+  width: 3px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 2px;
+  animation: wave-idle 1.4s ease-in-out infinite;
+}
+
+.arc-core--listening .arc-core__bar,
+.arc-core--thinking .arc-core__bar {
+  animation-name: wave-active;
+}
+
+.arc-core--listening .arc-core__glow {
+  animation-duration: 1.5s;
+  background: radial-gradient(
+    circle,
+    rgba(56, 189, 248, 0.4) 0%,
+    rgba(14, 165, 233, 0.15) 45%,
+    transparent 70%
+  );
+}
+
+.arc-core--thinking .arc-core__ring {
+  animation-duration: 0.8s;
+  border-top-color: #a78bfa;
+  border-right-color: rgba(167, 139, 250, 0.3);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes wave-idle {
+  0%,
+  100% {
+    height: 6px;
+    opacity: 0.4;
+  }
+  50% {
+    height: 14px;
+    opacity: 0.7;
+  }
+}
+
+@keyframes wave-active {
+  0%,
+  100% {
+    height: 4px;
+  }
+  50% {
+    height: 28px;
+  }
+}
