@@ -21,7 +21,7 @@
 }
 
 .sidebar-toggle--open {
-  left: calc(var(--tab-left, 1.1rem) + var(--tab-width, min(450px, 32vw)) - 2.6rem);
+  left: calc(var(--tab-left, 1.1rem) + var(--sidebar-active-width) - 2.6rem);
 }
 
 .sidebar-toggle:hover {

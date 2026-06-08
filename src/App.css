@@ -11,6 +11,10 @@
   perspective: 1400px;
 }
 
+.app--sidebar-wide {
+  --sidebar-active-width: var(--tab-width-projects);
+}
+
 .app__stage {
   position: relative;
   display: flex;
@@ -32,7 +36,7 @@
 }
 
 .app__stage--shifted {
-  transform: translate3d(calc((var(--tab-left) + var(--tab-width)) / 2), 0, 0);
+  transform: translate3d(calc((var(--tab-left) + var(--sidebar-active-width)) / 2), 0, 0);
 }
 
 .app__stage--history-shifted {
@@ -41,7 +45,7 @@
 
 .app__stage--shifted.app__stage--history-shifted {
   transform: translate3d(
-    calc(0.5 * (var(--tab-left) + var(--tab-width)) - var(--history-shift)),
+    calc(0.5 * (var(--tab-left) + var(--sidebar-active-width)) - var(--history-shift)),
     0,
     0
   );

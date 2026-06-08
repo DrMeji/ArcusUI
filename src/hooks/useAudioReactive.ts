@@ -1,8 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
-const SPEAK_THRESHOLD = 0.06;
-const SILENCE_MS = 400;
+const SPEAK_THRESHOLD = 0.14;
+const NOISE_FLOOR = 0.05;
+const LEVEL_GAIN = 1.35;
+const IDLE_LEVEL_MIX = 0.06;
+const SILENCE_MS = 500;
 const RESPONSE_MS = 2800;
+const VOICE_BIN_START = 3;
+const VOICE_BIN_END = 40;
+const LEVEL_SMOOTHING = 0.08;
 
 export interface AudioReactiveState {
   level: number;
@@ -30,18 +36,25 @@ export function useAudioReactive(): AudioReactiveState {
     let analyser: AnalyserNode | null = null;
     let stream: MediaStream | null = null;
     const data = new Uint8Array(256);
+    let smoothedLevel = 0;
 
     const tick = () => {
       if (cancelled || !analyser) return;
 
       analyser.getByteFrequencyData(data);
       let sum = 0;
-      for (let i = 0; i < data.length; i += 1) sum += data[i];
-      const raw = sum / (data.length * 255);
-      const smoothed = Math.min(1, raw * 2.8);
+      let count = 0;
+      for (let i = VOICE_BIN_START; i <= VOICE_BIN_END; i += 1) {
+        sum += data[i];
+        count += 1;
+      }
+      const raw = sum / (count * 255);
+      const gated = Math.max(0, raw - NOISE_FLOOR);
+      const normalized = Math.min(1, gated * LEVEL_GAIN);
+      smoothedLevel += (normalized - smoothedLevel) * LEVEL_SMOOTHING;
       const now = performance.now();
 
-      let userSpeaking = smoothed > SPEAK_THRESHOLD;
+      let userSpeaking = smoothedLevel > SPEAK_THRESHOLD;
       if (userSpeaking) {
         speakingRef.current = true;
         silenceStartRef.current = null;
@@ -63,7 +76,7 @@ export function useAudioReactive(): AudioReactiveState {
 
       const combined = Math.min(
         1,
-        smoothed * (userSpeaking ? 1 : 0.35) + assistantLevel,
+        smoothedLevel * (userSpeaking ? 0.85 : IDLE_LEVEL_MIX) + assistantLevel,
       );
 
       setLevel(combined);
@@ -80,7 +93,7 @@ export function useAudioReactive(): AudioReactiveState {
         audioContext = new AudioContext();
         analyser = audioContext.createAnalyser();
         analyser.fftSize = 512;
-        analyser.smoothingTimeConstant = 0.82;
+        analyser.smoothingTimeConstant = 0.9;
 
         const source = audioContext.createMediaStreamSource(stream);
         source.connect(analyser);

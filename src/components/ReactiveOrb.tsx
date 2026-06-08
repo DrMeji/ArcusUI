@@ -27,7 +27,7 @@ const vertexShader = /* glsl */ `
   void main() {
     vec3 n = normalize(normalMatrix * normal);
     float t = uTime;
-    float energy = 0.08 + uActivity * 0.36 + uSpeak * 0.24;
+    float energy = 0.08 + uActivity * 0.22 + uSpeak * 0.16;
     float disp = ripple(position, t) * energy;
     vec3 displaced = position + normal * disp;
 
@@ -76,13 +76,13 @@ const fragmentShader = /* glsl */ `
     color = mix(color, highlight, smoothstep(0.74, 0.98, blend));
 
     float inner = pow(max(dot(viewDir, vNormal), 0.0), 1.65);
-    color += highlight * inner * (0.12 + uActivity * 0.06 + uSpeak * 0.05);
+    color += highlight * inner * (0.12 + uActivity * 0.04 + uSpeak * 0.03);
 
     vec3 rim = mix(cyanGlow, highlight, fresnel * 0.95 + 0.05);
     color = mix(color, rim, fresnel * 0.42);
-    color += fresnel * cyanGlow * (0.22 + uActivity * 0.14 + uSpeak * 0.1);
+    color += fresnel * cyanGlow * (0.22 + uActivity * 0.09 + uSpeak * 0.07);
 
-    float energy = 0.96 + uActivity * 0.03 + uSpeak * 0.02;
+    float energy = 0.96 + uActivity * 0.02 + uSpeak * 0.015;
     color *= energy;
 
     float alpha = smoothstep(0.96, 0.32, fresnel) * 0.94;
@@ -181,23 +181,23 @@ export function ReactiveOrb({
           ? targetActivity
           : 0.08 + Math.sin(elapsed * 1.2) * 0.04;
 
-      smoothActivity += (targetActivity - smoothActivity) * 0.12;
-      smoothSpeak += (targetSpeak - smoothSpeak) * 0.14;
+      smoothActivity += (targetActivity - smoothActivity) * 0.06;
+      smoothSpeak += (targetSpeak - smoothSpeak) * 0.08;
 
       uniforms.uTime.value = elapsed;
       uniforms.uActivity.value = smoothActivity;
       uniforms.uSpeak.value = assistantRef.current ? smoothSpeak : 0;
 
-      const wobble = smoothActivity * 0.35 + smoothSpeak * 0.2;
-      orb.rotation.x = Math.sin(elapsed * 0.35) * 0.12 * wobble;
-      orb.rotation.y = elapsed * (0.18 + smoothActivity * 0.25);
-      orb.rotation.z = Math.cos(elapsed * 0.28) * 0.08 * wobble;
+      const wobble = smoothActivity * 0.2 + smoothSpeak * 0.12;
+      orb.rotation.x = Math.sin(elapsed * 0.35) * 0.08 * wobble;
+      orb.rotation.y = elapsed * (0.18 + smoothActivity * 0.12);
+      orb.rotation.z = Math.cos(elapsed * 0.28) * 0.05 * wobble;
 
-      const pulse = 1 + smoothActivity * 0.06 + smoothSpeak * 0.04;
+      const pulse = 1 + smoothActivity * 0.035 + smoothSpeak * 0.025;
       orb.scale.setScalar(viewportScale * pulse);
 
-      const driftX = Math.sin(elapsed * 0.55) * 0.05 * wobble;
-      const driftY = Math.cos(elapsed * 0.42) * 0.04 * wobble;
+      const driftX = Math.sin(elapsed * 0.55) * 0.03 * wobble;
+      const driftY = Math.cos(elapsed * 0.42) * 0.025 * wobble;
       orb.position.set(driftX, driftY, 0);
 
       renderer.render(scene, camera);

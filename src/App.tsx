@@ -22,6 +22,7 @@ const INITIAL_MESSAGES: Message[] = [
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarProjectsMode, setSidebarProjectsMode] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
   const [listeningOpen, setListeningOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -78,12 +79,18 @@ export default function App() {
   });
 
   return (
-    <div className="app">
+    <div
+      className={`app ${sidebarOpen && sidebarProjectsMode ? "app--sidebar-wide" : ""}`}
+    >
       <SidebarToggle
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen((open) => !open)}
       />
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onProjectsModeChange={setSidebarProjectsMode}
+      />
 
       <HistoryPanel
         isOpen={historyOpen}

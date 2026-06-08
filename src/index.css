@@ -26,6 +26,8 @@
   --tab-inset: 0.58rem;
   --tab-top: var(--tab-inset);
   --tab-width: min(330px, 28vw);
+  --tab-width-projects: min(400px, 34vw);
+  --sidebar-active-width: var(--tab-width);
   --history-width: min(570px, 44vw);
   --history-shift: calc(0.5 * (var(--tab-inset) + var(--history-width)));
 }

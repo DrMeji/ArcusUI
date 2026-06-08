@@ -8,6 +8,20 @@ function IconBase({ children }: { children: ReactNode }) {
   );
 }
 
+export function BackIcon() {
+  return (
+    <IconBase>
+      <path
+        d="M14.25 6.75 8.25 12l6 5.25"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </IconBase>
+  );
+}
+
 export function DashboardIcon() {
   return (
     <IconBase>
@@ -34,6 +48,25 @@ export function MemorySearchIcon() {
         stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
+      />
+    </IconBase>
+  );
+}
+
+export function ProjectsIcon() {
+  return (
+    <IconBase>
+      <path
+        d="M5 8.75h5.5L12 11h7a1.5 1.5 0 0 1 1.5 1.5V17a1.5 1.5 0 0 1-1.5 1.5H6.5A1.5 1.5 0 0 1 5 17V8.75Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5 8.75V7.25A1.25 1.25 0 0 1 6.25 6h4.5L12 8.75"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
       />
     </IconBase>
   );
